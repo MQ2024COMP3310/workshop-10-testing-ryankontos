@@ -2,7 +2,10 @@
 ## Please add your name below this line
 
 Ryan Kontos
+
 Sean Johnston
+
+Luke Ryan
 
 # COMP3310 Week 10
 
