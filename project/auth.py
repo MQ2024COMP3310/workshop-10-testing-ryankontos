@@ -34,6 +34,10 @@ def login_post():
 def signup():
     return render_template('signup.html')
 
+@auth.route('/signup2')
+def signup2():
+    return render_template('signup.html')
+
 @auth.route('/signup', methods=['POST'])
 def signup_post():
     email = clean(request.form.get('email'))
