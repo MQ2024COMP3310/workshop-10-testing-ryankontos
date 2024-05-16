@@ -35,8 +35,10 @@ class TestWebApp(unittest.TestCase):
         assert response.status_code == 200
 
     def test_no_access_to_profile(self):
-        # TODO: Check that non-logged-in user should be redirected to /login
-        assert False
+        response = self.client.get('/profile', follow_redirects=False)
+        assert response.status_code == 302 
+        assert '/login' in response.headers['Location'] 
+
 
     def test_register_user(self):
         response = self.client.post('/signup', data = {
@@ -64,7 +66,6 @@ class TestWebApp(unittest.TestCase):
             'password' : 'test123'
         }, follow_redirects = True)
         assert response.status_code == 200
-        # should redirect to the login page
         assert response.request.path == '/login'
 
         user = User.query.filter_by(email='user@test.com').first()
@@ -80,7 +81,16 @@ class TestWebApp(unittest.TestCase):
         assert response.status_code == 200 
 
     def test_xss_vulnerability(self):
-        # TODO: Can we store javascript tags in the username field?
-        assert False
+        evil_name = '<script>alet("xss")<r/script>'
+        self.client.post('/signup', data={
+            'email': 'test@js.com',
+            'name': evil_name,
+            'password': 'secure'
+        }, follow_redirects=True)
+
+        
+        user = User.query.filter_by(email='test@js.com').first()
+        assert evil_name not in user.name
+
 
 
